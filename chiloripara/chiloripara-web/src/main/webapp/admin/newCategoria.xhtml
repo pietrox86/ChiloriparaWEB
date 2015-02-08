@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:customer="http://java.sun.com/jsf/composite/components/customer"
+	template="/WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+
+
+
+		<h:form id="categoriaForm">
+			<p:growl id="growl" sticky="true" showDetail="true" />
+			<h2>Categorie Esistenti</h2>
+			<p:dataTable value="#{catMB.categorie}" id="display" var="cat">
+			
+				<p:column headerText="Id">
+					<h:outputText value="#{cat.id}" />
+				</p:column>
+				<p:column headerText="Descrizione">
+					<h:outputText value="#{cat.descrizione}" />
+				</p:column>
+				<p:column headerText="Abilitata">
+					<p:selectBooleanCheckbox value="#{cat.abilitato}"
+						disabled="true" />
+				</p:column>
+				<p:column headerText="Azioni">
+				<p:commandLink styleClass="ui-icon ui-icon-check" style="display:inline-block" actionListener="#{catMB.enable}" update="display">
+					<f:attribute name="catIdAction" value="#{cat.id}" />
+				</p:commandLink>
+				<p:commandLink styleClass="ui-icon ui-icon-cancel" style="display:inline-block" actionListener="#{catMB.disable}" update="display">
+					<f:attribute name="catIdAction" value="#{cat.id}" />
+				</p:commandLink>
+				<p:commandLink styleClass="ui-icon ui-icon-trash" style="display:inline-block" actionListener="#{catMB.delete}" update="display">
+					<f:attribute name="catIdAction" value="#{cat.id}" />
+				</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+			<br />
+			<p:fieldset legend="Inserisci nuova categoria"
+				style="margin-bottom:20px">
+
+				<h:panelGrid columns="2" cellpadding="5">
+					<p:outputLabel for="categoria" value="Descrizione: " />
+					<p:inputText id="categoria" value="#{catMB.cat.descrizione}" />
+					<p:outputLabel for="abil" value="Abilitata " />
+					<p:selectBooleanCheckbox id="abil" value="#{catMB.cat.abilitato}" />
+
+					<p:commandButton value="Inserisci" update="display,growl"
+						actionListener="#{catMB.save}" />
+					<p:commandButton value="Reset" type="reset" />
+
+				</h:panelGrid>
+				</p:fieldset>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:customer="http://java.sun.com/jsf/composite/components/customer"
+	template="/WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+		<h:form id="profiloForm">
+			<p:panel header=" #{msg.profilo_scheda}" id="imgs">
+				<p:panelGrid style="width:100%">
+					<p:row>
+						<p:column colspan="2">
+							<p:graphicImage library="images" name="noimage.gif" width="40%"
+								rendered="#{empty profiloMB.artigiano.icon}" />
+							<p:graphicImage value="#{images.icon}" cache="FALSE" width="40%"
+								rendered="#{not empty profiloMB.artigiano.icon}">
+								<f:param name="iconId" value="#{profiloMB.artigiano.id}" />
+							</p:graphicImage>
+
+							<p:fileUpload fileUploadListener="#{profiloMB.handleFileUpload}"
+								value="#{profiloMB.file}" mode="advanced" skinSimple="true"
+								allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  sizeLimit="1024000" />
+							<p:commandButton actionListener="#{profiloMB.deleteIcon}"
+								update="imgs" value="Elimina Icona"></p:commandButton>
+						</p:column>
+
+					</p:row>
+					<p:row>
+						<p:column>
+							<h:outputText value="Ragione Sociale:" />
+						</p:column>
+						<p:column>
+							<h:inputText value="#{profiloMB.artigiano.ragioneSociale}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<h:outputText value="Indirizzo:" />
+						</p:column>
+						<p:column>
+							<h:inputText value="#{profiloMB.artigiano.indirizzo}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<h:outputText value="CAP" />
+						</p:column>
+						<p:column>
+							<p:inputText value="#{profiloMB.artigiano.comune.cap.cap}"
+								label="CAP" required="true">
+								<p:ajax event="keyup" update="comune"
+									listener="#{profiloMB.loadComuni}" />
+							</p:inputText>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<h:outputText value="Comune" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu style="width:225px" id="comune"
+								value="#{profiloMB.artigiano.comune.id}" required="true"
+								label="Comune">
+								<f:selectItem></f:selectItem>
+								<f:selectItems value="#{profiloMB.comuni}"></f:selectItems>
+								<p:ajax event="valueChange"
+									listener="#{profiloMB.aggiornaComune}" />
+							</p:selectOneMenu>
+
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<h:outputText value="Telefono" />
+						</p:column>
+						<p:column>
+							<h:inputText value="#{profiloMB.artigiano.telefono}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<h:outputText value="Email" />
+						</p:column>
+						<p:column>
+							<h:inputText value="#{profiloMB.artigiano.email}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<h:outputText value="Partita IVA" />
+						</p:column>
+						<p:column>
+							<h:inputText value="#{profiloMB.artigiano.piva}" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<p:commandButton ajax="false" value="Aggiorna dati profilo"
+				action="#{profiloMB.aggiornaDati}"></p:commandButton>
+			</p:panel>
+		</h:form>
+		<h:form>
+			<p:panel header="Aggiorna password">
+				<p:panelGrid style="width:100%">
+					<p:row>
+						<p:column>
+							<p:outputLabel for="pwd1"  value="Password" />
+						</p:column>
+						<p:column>
+							<p:password id="pwd1" value="#{profiloMB.artigiano.password}"
+								match="pwd2" required="true">
+
+							</p:password>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel for="pwd2" value="Ripeti Password" />
+						</p:column>
+						<p:column>
+							<p:password id="pwd2" value="#{profiloMB.artigiano.password}"
+								required="true">
+
+							</p:password>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<p:commandButton ajax="false" value="Aggiorna password"
+				action="#{profiloMB.aggiornaPassword}"></p:commandButton>
+			</p:panel>
+		</h:form>
+		<p:panel header="Mappa">
+			<p:gmap
+				center="#{profiloMB.artigiano.lat}, #{profiloMB.artigiano.lng}"
+				model="#{profiloMB.model}" zoom="15" type="map"
+				style="width:100%;height:200px" />
+		</p:panel>
+
+	</ui:define>
+
+
+	<script src="http://maps.google.com/maps/api/js?sensor=false"
+		type="text/javascript"></script>
+
+</ui:composition>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:customer="http://java.sun.com/jsf/composite/components/customer"
+	template="/WEB-INF/templates/templateLogin.xhtml">
+	<ui:define name="content">
+		<h:form id="loginForm" prependId="false">
+			
+			<p:panel header="LOGIN" style="width:30%">
+				<h:panelGrid columns="3" layout="grid" border="0" >
+					<h:outputLabel for="j_username" value="Username: " />
+					<h:inputText id="j_username" required="true" label="username"
+						value="#{loginMB.username}" />
+					<h:message for="j_username" display="text" style="color:red" />
+
+					<h:outputLabel for="j_password" value="Password: " />
+					<h:inputSecret id="j_password" type="password" label="password"
+						required="true" value="#{loginMB.password}" />
+					<h:message for="j_password" display="text" style="color:red" />
+
+					<p:commandButton id="login" value="Login"
+						action="#{loginMB.doLogin}" />
+				</h:panelGrid>
+			</p:panel>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body>
+<p:panelGrid columns="2">
+    <f:facet name="header">
+        <p:graphicImage url="#{profileManagedBean.artigiano.icona}" />
+    </f:facet>
+ 
+    <h:outputText value="Nome:" />
+    <h:outputText value="#{profileManagedBean.artigiano.nome}" />
+ 
+    <h:outputText value="Indirizzo:" />
+    <h:outputText value="#{profileManagedBean.artigiano.indirizzo}" />
+ 	
+ 	<h:outputText value="Comune" />
+    <h:outputText value="#{profileManagedBean.artigiano.comune}" />
+    
+    <h:outputText value="CAP" />
+    <h:outputText value="#{profileManagedBean.artigiano.cap}" />
+ 
+ 
+    <h:outputText value="Descrizione:" />
+    <h:outputText value="#{profileManagedBean.artigiano.descrizione}" />
+</p:panelGrid>
+
+</h:body>
+</html>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:customer="http://java.sun.com/jsf/composite/components/customer"
+	template="/WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+		<p:panel id="mainPanel">
+			<h:form id="abbonamentoForm">
+				<p:growl id="growl" sticky="true" showDetail="true" />
+
+				<p:dataList value="#{abbonamentoMB.registro}" var="reg"
+					style="width:50%"
+					emptyMessage="#{msg.abbonamento_situazione_empty}">
+					<f:facet name="header">
+          #{msg.abbonamento_situazione}
+      		  </f:facet>
+      		 #{reg.categoria.descrizione} , Scadenza: <h:outputText
+						value="#{reg.dtExpire}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:dataList>
+
+				<p:separator></p:separator>
+				<p:pickList rendered="#{not abbonamentoMB.displayPayPal}"
+					converter="catConverter" id="listaCategorie"
+					value="#{abbonamentoMB.categorie}" var="cat"
+					itemLabel="#{cat.descrizione}" itemValue="#{cat}" style="width:50%">
+					<p:ajax update="importo,importoSemestrale" event="transfer"
+						listener="#{abbonamentoMB.calcolaPrezzo}" />
+					<f:facet name="sourceCaption">#{msg.abbonamento_categorieDisponibili}</f:facet>
+					<f:facet name="targetCaption">#{msg.abbonamento_categorieSelezionate}</f:facet>
+				</p:pickList>
+				<p:dataList rendered="#{abbonamentoMB.displayPayPal}" var="cat"
+					value="#{abbonamentoMB.categorie.target}" style="width:50%">
+					<f:facet name="header">
+           			#{msg.abbonamento_categorieSelezionate}
+     			  </f:facet>
+     			  #{cat.descrizione}
+				</p:dataList>
+
+					#{msg.abbonamento_nuovoimporto}: € <h:outputText id="importo"
+					value="#{abbonamentoMB.prezzo}" />
+					<br/>
+					#{msg.abbonamento_nuovoimporto_semestrale}: € <h:outputText id="importoSemestrale"
+					value="#{abbonamentoMB.prezzoSemestrale}" />
+						<br/>
+				<p:commandButton rendered="#{not abbonamentoMB.displayPayPal}"
+					value="Conferma" actionListener="#{abbonamentoMB.conferma}"
+					ajax="false" update=":paypalPanel"></p:commandButton>
+				<p:commandButton rendered="#{abbonamentoMB.displayPayPal}"
+					value="Modifica" actionListener="#{abbonamentoMB.modifica}"
+					ajax="false" update=":paypalPanel,:mainPanel"></p:commandButton>
+
+			</h:form>
+		</p:panel>
+		<p:panel id="paypalPanel" rendered="#{abbonamentoMB.displayPayPal}" style="width:100%">
+
+			<form action="#{abbonamentoMB.payPalAction}"
+				method="post" target="_top">
+				<input type="hidden" name="cmd" value="_xclick" /> 
+					<input type="hidden" name="business" value="#{abbonamentoMBMB.paypalEmail}" />
+					<INPUT type="hidden" name="custom" value="#{abbonamentoMB.authCode}"/>
+					<input type="hidden" name="lc" value="IT" />
+					<input type="hidden" name="currency_code" value="EUR" />
+					<input type="hidden" name="no_note" value="1" />
+					<input type="hidden" name="no_shipping" value="1" />
+					<input type="hidden" name="currency_code" value="EUR" />
+					<input type="hidden" name="amount" value="#{abbonamentoMB.prezzo}"/>
+					<input type="hidden" name="item_name" value="Abbonamento alle categorie #{abbonamentoMB.listCategorieString}"/>
+					<input type="hidden" name="quantity" value="1"/>
+					<input type="hidden" name="tax" value="#{abbonamentoMB.iva}"/>
+					<input type="hidden" name="return" value="#{abbonamentoMB.confirmURL}" />
+					<input type="hidden" name="notify_url" value="#{abbonamentoMB.IPNURL}" />
+					<input type="hidden" name="cancel_return" value="#{abbonamentoMB.cancelURL}" />
+					<input type="hidden" name="address1" value="#{abbonamentoMB.artigiano.indirizzo}"/>
+					<input type="hidden" name="city" value="#{abbonamentoMB.artigiano.comune.name}"/>
+					<input type="hidden" name="zip" value="#{abbonamentoMB.artigiano.comune.cap.cap}"/>
+					<input type="hidden" name="email" value="#{abbonamentoMB.artigiano.email}"/>
+					<input type="hidden" name="first_name" value="#{abbonamentoMB.artigiano.ragioneSociale}"/>
+				<input type="hidden" name="cancel_ return"
+					value="http://myproject.somedomain.net/advertiser/guthaben-aufladen/ret/canceled" />
+
+				<input type="image"
+					src="https://www.paypalobjects.com/it_IT/IT/i/btn/btn_buynowCC_LG.gif"
+					border="0" name="submit"
+					alt="PayPal - Il metodo rapido, affidabile e innovativo per pagare e farsi pagare." />
+				<img alt="" border="0"
+					src="https://www.paypalobjects.com/it_IT/i/scr/pixel.gif" width="1"
+					height="1" />
+			</form>
+			
+			<form action="#{abbonamentoMB.payPalAction}" id="abbonamento"
+				method="post" target="_top">
+				<input type="hidden" name="cmd" value="_xclick-subscriptions" />
+				<input type="hidden" name="business" value="#{abbonamentoMB.paypalEmail}" /> 
+				<input type="hidden" name="item_name" value="Abbonamento alle categorie #{abbonamentoMB.listCategorieString}"/>
+				<input type="hidden" name="lc" value="IT" />
+				<input type="hidden" name="txn_type" value="subscr_signup" />
+				<INPUT type="hidden" name="custom" value="#{abbonamentoMB.authCodeSem}"/>
+				<input type="hidden" name="return" value="#{abbonamentoMB.confirmURL}" />
+				<input type="hidden" name="notify_url" value="#{abbonamentoMB.IPNURL}" />
+				<input type="hidden" name="cancel_return" value="#{abbonamentoMB.cancelURL}" />
+				<input type="hidden" name="address1" value="#{abbonamentoMB.artigiano.indirizzo}"/>
+				<input type="hidden" name="city" value="#{abbonamentoMB.artigiano.comune.name}"/>
+				<input type="hidden" name="zip" value="#{abbonamentoMB.artigiano.comune.cap.cap}"/>
+				<input type="hidden" name="email" value="#{abbonamentoMB.artigiano.email}"/>
+				<input type="hidden" name="first_name" value="#{abbonamentoMB.artigiano.ragioneSociale}"/>
+				<input type="hidden" name="no_note" value="1" /> 
+				<!-- <input type="hidden" name="a1" value="0.00" /> 
+				<input type="hidden" name="p1" value="1" /> 
+				<input type="hidden" name="t1" value="M" />  -->
+				<input type="hidden" name="src" value="1" /> 
+				<input type="hidden" name="a3" value="#{abbonamentoMB.prezzoSemestrale}" /> 
+				<input type="hidden" name="tax" value="#{abbonamentoMB.ivaSemestrale}"/>
+				<input type="hidden" name="p3" value="6" /> 
+				<input type="hidden" name="t3" value="M" />		
+				<input type="hidden" name="currency_code" value="EUR" /> 
+				<input type="hidden" name="srt" value="2" />
+				<input type="hidden" name="bn" value="PP-SubscriptionsBF:btn_subscribeCC_LG.gif:NonHostedGuest" />
+				<input type="image"	src="https://www.sandbox.paypal.com/it_IT/IT/i/btn/btn_subscribeCC_LG.gif"
+					border="0" name="submit" alt="PayPal - Il metodo rapido, affidabile e innovativo per pagare e farsi pagare." />
+				<img alt="" border="0" src="https://www.sandbox.paypal.com/it_IT/i/scr/pixel.gif"
+					width="1" height="1" />
+			</form>
+			
+
+
+
+		</p:panel>
+
+
+
+
+	</ui:define>
+</ui:composition>

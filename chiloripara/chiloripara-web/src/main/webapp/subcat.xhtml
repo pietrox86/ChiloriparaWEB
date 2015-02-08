@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:customer="http://java.sun.com/jsf/composite/components/customer"
+	template="/WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+		<p:panel id="mainPanel">
+			<h:form id="subCatForm">
+				<p:growl id="growl" sticky="true" showDetail="true" />
+				<p:tree value="#{subCatMB.root}" var="node">
+					<p:treeNode>
+						<h:outputText value="#{node}" />
+					</p:treeNode>
+				</p:tree>
+
+				<!-- 		<p:dataList value="#{abbonamentoMB.registro}" var="reg"
+					style="width:50%"
+					emptyMessage="#{msg.abbonamento_situazione_empty}">
+					<f:facet name="header">
+          #{msg.abbonamento_situazione}
+      		  </f:facet>
+      		 #{reg.categoria.descrizione} , Scadenza: <h:outputText
+						value="#{reg.dtExpire}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:dataList> -->
+
+				<p:separator></p:separator>
+				<!-- 	<p:pickList rendered="#{not abbonamentoMB.displayPayPal}"
+					converter="catConverter" id="listaCategorie"
+					value="#{subCatMB.artigiano.categorie}" var="cat"
+					itemLabel="#{cat.descrizione}" itemValue="#{cat}" style="width:50%">
+					<p:ajax update="importo,importoSemestrale" event="transfer"
+						listener="#{abbonamentoMB.calcolaPrezzo}" />
+					<f:facet name="sourceCaption">#{msg.abbonamento_categorieDisponibili}</f:facet>
+					<f:facet name="targetCaption">#{msg.abbonamento_categorieSelezionate}</f:facet>
+				</p:pickList> -->
+				<!-- 	<p:dataList rendered="#{abbonamentoMB.displayPayPal}" var="cat"
+					value="#{abbonamentoMB.categorie.target}" style="width:50%">
+					<f:facet name="header">
+           			#{msg.abbonamento_categorieSelezionate}
+     			  </f:facet>
+     			  #{cat.descrizione}
+				</p:dataList>
+
+					#{msg.abbonamento_nuovoimporto}: € <h:outputText id="importo"
+					value="#{abbonamentoMB.prezzo}" />
+					<br/>
+					#{msg.abbonamento_nuovoimporto_semestrale}: € <h:outputText id="importoSemestrale"
+					value="#{abbonamentoMB.prezzoSemestrale}" />
+						<br/>
+				<p:commandButton rendered="#{not abbonamentoMB.displayPayPal}"
+					value="Conferma" actionListener="#{abbonamentoMB.conferma}"
+					ajax="false" update=":paypalPanel"></p:commandButton>
+				<p:commandButton rendered="#{abbonamentoMB.displayPayPal}"
+					value="Modifica" actionListener="#{abbonamentoMB.modifica}"
+					ajax="false" update=":paypalPanel,:mainPanel"></p:commandButton> -->
+
+			</h:form>
+		</p:panel>
+
+
+
+
+	</ui:define>
+</ui:composition>

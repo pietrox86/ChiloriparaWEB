@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:customer="http://java.sun.com/jsf/composite/components/customer"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	template="/WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+
+
+		<p:panel header="Chi lo ripara?">
+			<h:form id="ricercaForm" style="border-style:none">
+
+				<h:panelGrid columns="1" border="0" width="100%"
+					columnClasses="twenty-percent,eighty-percent">
+
+					<h:panelGrid columns="2" border="0" width="100%">
+						<p:outputLabel for="cat" value="Cosa devi riparare?"></p:outputLabel>
+						<p:selectOneMenu id="cat" value="#{ricercaMB.catId}" required="true"
+							label="Categoria" effect="blind" filter="true">
+							<f:selectItem itemLabel="#{msg_home_selOne}" itemDisabled="true"></f:selectItem>
+							<f:selectItems value="#{ricercaMB.categorie}" />
+							<p:ajax event="change" update="ricercaForm"
+								listener="#{ricercaMB.loadSubCat}">
+							</p:ajax>
+
+						</p:selectOneMenu>
+						<p:outputLabel for="subcat" value="Cosa in particolare?"
+							rendered="#{ricercaMB.renderSubCats}"></p:outputLabel>
+						<p:selectOneMenu id="subcat" value="#{ricercaMB.subCatId}"
+							rendered="#{ricercaMB.renderSubCats}" required="false"
+							label="Categoria" effect="blind" filter="true">
+							<f:selectItem itemLabel="#{msg_home_selOne}" itemDisabled="true"></f:selectItem>
+							<f:selectItems value="#{ricercaMB.subCats}" />
+
+						</p:selectOneMenu>
+					</h:panelGrid>
+					<h:panelGrid columns="2" border="0" width="100%">
+						<p:outputLabel for="ind" value="Dove sei?"></p:outputLabel>
+						<p:inputText id="ind" value="#{ricercaMB.address}" required="true"
+							label="Indirizzo" size="30"></p:inputText>
+
+
+						<p:watermark for="ind" value="#{msg.home_insert_Address}"
+							id="watermark" />
+					</h:panelGrid>
+					
+				</h:panelGrid>
+				<p:commandButton value="Trova l'Artigiano" id="findBtn"
+					action="#{ricercaMB.find}" />
+
+
+
+			</h:form>
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

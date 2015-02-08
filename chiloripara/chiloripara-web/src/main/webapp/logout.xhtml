@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:customer="http://java.sun.com/jsf/composite/components/customer"
+	template="/WEB-INF/templates/templateLogin.xhtml">
+	<ui:define name="content">
+		<h:form id="logoutForm">
+			<p:growl id="msg" showDetail="true"></p:growl>
+			<p:panel>
+			<p:link value="Torna alla Home" outcome="home"></p:link>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

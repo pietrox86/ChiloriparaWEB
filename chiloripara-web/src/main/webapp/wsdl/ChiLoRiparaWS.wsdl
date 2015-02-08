@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://impl.webservice.chiloripara.pbc.it" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://impl.webservice.chiloripara.pbc.it" xmlns:intf="http://impl.webservice.chiloripara.pbc.it" xmlns:tns1="http://model.webservice.chiloripara.pbc.it" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://impl.webservice.chiloripara.pbc.it" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://model.webservice.chiloripara.pbc.it"/>
+   <element name="recuperaCategorie">
+    <complexType/>
+   </element>
+   <element name="recuperaCategorieResponse">
+    <complexType>
+     <sequence>
+      <element name="recuperaCategorieReturn" type="tns1:RecuperaCategorieResponse"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="ArrayOf_tns1_CategoriaWS">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:CategoriaWS"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://model.webservice.chiloripara.pbc.it" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://impl.webservice.chiloripara.pbc.it"/>
+   <complexType name="CategoriaWS">
+    <sequence>
+     <element name="desc" nillable="true" type="xsd:string"/>
+     <element name="id" type="xsd:long"/>
+    </sequence>
+   </complexType>
+   <complexType name="RecuperaCategorieResponse">
+    <sequence>
+     <element name="categorie" nillable="true" type="impl:ArrayOf_tns1_CategoriaWS"/>
+     <element name="returnCode" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="recuperaCategorieRequest">
+
+      <wsdl:part element="impl:recuperaCategorie" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="recuperaCategorieResponse">
+
+      <wsdl:part element="impl:recuperaCategorieResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="ChiLoRiparaWS">
+
+      <wsdl:operation name="recuperaCategorie">
+
+         <wsdl:input message="impl:recuperaCategorieRequest" name="recuperaCategorieRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:recuperaCategorieResponse" name="recuperaCategorieResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="ChiLoRiparaWSSoapBinding" type="impl:ChiLoRiparaWS">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="recuperaCategorie">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="recuperaCategorieRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="recuperaCategorieResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="ChiLoRiparaWSService">
+
+      <wsdl:port binding="impl:ChiLoRiparaWSSoapBinding" name="ChiLoRiparaWS">
+
+         <wsdlsoap:address location="http://localhost:8080/chiloripara-web/services/ChiLoRiparaWS"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

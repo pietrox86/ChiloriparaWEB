@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+	<script>
+var geocoder;
+function codeAddress(address) {
+	var address= document.getElementById("mainForm:mainForm:address").value;
+  
+  geocoder = new google.maps.Geocoder();
+  geocoder.geocode( { 'address': address}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+   
+     alert(results[0].geometry.location.lat());
+     
+     var latA = results[0].geometry.location.lat();
+     var lonA = results[0].geometry.location.lng();
+     
+     var cattoglio="via stazione 114 crema";
+     
+     
+     geocoder.geocode( { 'address': cattoglio}, function(resultsB, statusB) {
+    	 if (statusB == google.maps.GeocoderStatus.OK) {
+    		 var latB = resultsB[0].geometry.location.lat();
+    	     var lonB = resultsB[0].geometry.location.lng();
+    	    
+    	     alert(latA);
+    	     
+    	     
+    	     
+    	     latA= (latA*3.141518)/180;
+    	     latB= (latB*3.141518)/180;
+    	     
+    	     lonA = (lonA*3.141518)/180;
+    	     lonB = (lonB*3.141518)/180;
+    	     alert(latA);
+    	     var R = 6372.795477598;
+    	     
+    	     var distanza= R * Math.acos(Math.sin(latA) * Math.sin(latB) + Math.cos(latA) * Math.cos(latB) * Math.cos(lonA-lonB));
+    	     alert("la distanza da cattoglio service è di "+distanza+" KM in linea d'aria");
+    	 }
+     });
+ 
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+  
+  
+  
+}
+
+    </script>
+
+</h:head>
+<h:body>
+	<h:form id="mainForm">
+		<p:panel id="ricerca" header="Ricerca" style="margin-bottom:20px">
+			<h:panelGrid columns="4" cellpadding="10" id="ricercaPanelGrid">
+
+				<p:outputLabel for="categorie" value="Cosa: " />
+				<p:selectOneMenu id="categorie"
+					value="#{homePageManagedBean.categoriaSelezionata}"
+					style="width:150px">
+					<f:selectItem itemLabel="Cosa vuoi riparare?" itemValue=""
+						noSelectionOption="true" />
+					<f:selectItems value="#{homePageManagedBean.categorie}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel for="address" value="Dove: " />
+				<p:inputText id="address"></p:inputText>
+
+			<!-- 	<p:commandButton action="#{homePageManagedBean.goToResult()}"
+					onclick="location.href='profile.xhtml'" value="Trova l'artigiano!"></p:commandButton>
+-->
+				<p:commandButton value="Trova coordinate"
+					onclick="javascript:codeAddress()"></p:commandButton>
+
+			</h:panelGrid>
+		</p:panel>
+	</h:form>
+
+
+</h:body>
+</html>

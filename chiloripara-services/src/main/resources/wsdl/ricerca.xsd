@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns="http://webservices.samples.blog.com"
+	xmlns:tns="http://www.luigibennardis.it/spring-ws/Ecomm/Acquisto/types"
+	targetNamespace="http://webservices.samples.blog.com"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="RicercaResponse" />
+	<xs:complexType name="resp">
+		<xs:sequence>
+			<xs:element ref="retCode" maxOccurs="1"/>
+			<xs:element ref="artHeader" maxOccurs="10" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="artHeader">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ragioneSociale" type="xs:string" />
+				<xs:element name="indirizzo" type="xs:string" />
+				<xs:element name="cap" type="xs:string" />
+				<xs:element name="citta" type="xs:string" />
+				<xs:element name="distanza" type="xs:float" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="retCode">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="code" type="xs:string" />
+				<xs:element name="message" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="RicercaRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="lang" type="xs:string" maxOccurs="1" minOccurs="1" />
+				<xs:element ref="RiercaReqData" maxOccurs="1" minOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="RiercaReqData">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="CatId" />
+				<xs:element ref="Indirizzo" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatId" type="xs:string" />
+	<xs:element name="Indirizzo" type="xs:string" />
+</xs:schema>  
