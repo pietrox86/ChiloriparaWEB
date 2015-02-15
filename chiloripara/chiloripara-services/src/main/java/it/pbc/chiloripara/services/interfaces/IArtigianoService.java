@@ -2,6 +2,8 @@ package it.pbc.chiloripara.services.interfaces;
 
 import it.pbc.chiloripara.web.model.entities.Artigiano;
 import it.pbc.chiloripara.web.model.entities.Post;
+import it.pbc.chiloripara.web.model.entities.Preferenza;
+import it.pbc.chiloripara.web.model.entities.SubCategoria;
 import it.pbc.chiloripara.web.model.entities.Voto;
 
 import java.util.List;
@@ -30,5 +32,8 @@ public interface IArtigianoService {
 	public abstract List<Artigiano> list();
 
 	public abstract List<Voto> getVoti(Long artId);
+	
+	public abstract void savePreferenza(Artigiano artigiano,
+			List<SubCategoria> target);
 
 }

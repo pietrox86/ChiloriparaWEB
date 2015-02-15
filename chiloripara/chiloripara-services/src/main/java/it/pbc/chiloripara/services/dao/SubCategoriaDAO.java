@@ -18,9 +18,14 @@ public class SubCategoriaDAO extends GeneralDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<SubCategoria> getSubCat(Long catId) {
-		Query q = entityManager.createQuery("select c from SubCategoria c where c.categoria.id = :catId");
+		Query q = entityManager
+				.createQuery("select c from SubCategoria c where c.categoria.id = :catId");
 		q.setParameter("catId", catId);
 		return q.getResultList();
+	}
+
+	public SubCategoria get(Long id) {
+		return entityManager.find(SubCategoria.class, id);
 	}
 
 }

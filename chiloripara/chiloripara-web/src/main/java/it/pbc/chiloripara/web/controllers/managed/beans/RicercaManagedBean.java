@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class RicercaManagedBean {
 	private boolean renderSubCats = false;
 	private List<Categoria> list;
     
-    
+	
 	
 	
 	  public Map<String, String> getCategorie() {

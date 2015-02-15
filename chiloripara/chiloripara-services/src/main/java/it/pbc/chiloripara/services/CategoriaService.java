@@ -1,8 +1,10 @@
 package it.pbc.chiloripara.services;
 
 import it.pbc.chiloripara.services.dao.CategoriaDAO;
+import it.pbc.chiloripara.services.dao.SubCategoriaDAO;
 import it.pbc.chiloripara.services.interfaces.ICategoriaService;
 import it.pbc.chiloripara.web.model.entities.Categoria;
+import it.pbc.chiloripara.web.model.entities.SubCategoria;
 
 import java.util.List;
 
@@ -13,11 +15,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CategoriaService implements ICategoriaService {
-	
+
 	@Autowired
-	CategoriaDAO catDAO;
-	/* (non-Javadoc)
-	 * @see it.pbc.chiloripara.services.ICategoriaService#save(it.pbc.chiloripara.web.model.entities.Categoria)
+	private CategoriaDAO catDAO;
+	@Autowired
+	private SubCategoriaDAO subCatDAO;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.pbc.chiloripara.services.ICategoriaService#save(it.pbc.chiloripara
+	 * .web.model.entities.Categoria)
 	 */
 	@Override
 	@Transactional
@@ -25,26 +34,32 @@ public class CategoriaService implements ICategoriaService {
 		catDAO.save(cat);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.pbc.chiloripara.services.ICategoriaService#list()
 	 */
 	@Override
 	public List<Categoria> list() {
-		List<Categoria> cat =  catDAO.list();
-		
+		List<Categoria> cat = catDAO.list();
+
 		return cat;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.pbc.chiloripara.services.ICategoriaService#get(java.lang.Long)
 	 */
 	@Override
 	public Categoria get(Long catIdAction) {
-	
-		
+
 		return catDAO.get(catIdAction);
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.pbc.chiloripara.services.ICategoriaService#delete(java.lang.Long)
 	 */
 	@Override
@@ -54,8 +69,12 @@ public class CategoriaService implements ICategoriaService {
 		catDAO.delete(cat);
 
 	}
-	/* (non-Javadoc)
-	 * @see it.pbc.chiloripara.services.ICategoriaService#enableCat(java.lang.Long)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.pbc.chiloripara.services.ICategoriaService#enableCat(java.lang.Long)
 	 */
 	@Override
 	@Transactional
@@ -65,8 +84,12 @@ public class CategoriaService implements ICategoriaService {
 		catDAO.update(catRetrieved);
 
 	}
-	/* (non-Javadoc)
-	 * @see it.pbc.chiloripara.services.ICategoriaService#disableCat(java.lang.Long)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.pbc.chiloripara.services.ICategoriaService#disableCat(java.lang.Long)
 	 */
 	@Override
 	@Transactional
@@ -82,7 +105,14 @@ public class CategoriaService implements ICategoriaService {
 		Categoria cat = this.get(id);
 		cat.getSubCat();
 		return cat;
-		
+
 	}
+
+	@Override
+	public SubCategoria getSubCat(Long id) {
+		return subCatDAO.get(id);
+	}
+
+	
 
 }

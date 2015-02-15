@@ -11,6 +11,12 @@ import javax.persistence.ManyToOne;
 @Entity
 public class SubCategoria {
 	
+	@Override
+	public String toString() {
+		return "SubCategoria [id=" + id + ", name=" + name + ", categoria="
+				+ categoria + "]";
+	}
+
 	@Column
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

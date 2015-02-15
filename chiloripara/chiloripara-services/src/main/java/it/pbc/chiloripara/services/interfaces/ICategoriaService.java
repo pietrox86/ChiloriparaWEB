@@ -1,10 +1,9 @@
 package it.pbc.chiloripara.services.interfaces;
 
 import it.pbc.chiloripara.web.model.entities.Categoria;
+import it.pbc.chiloripara.web.model.entities.SubCategoria;
 
 import java.util.List;
-
-import javax.transaction.Transactional;
 
 public interface ICategoriaService {
 
@@ -21,5 +20,9 @@ public interface ICategoriaService {
 	public abstract void disableCat(Long catIdAction);
 
 	public abstract Categoria getNoLazy(Long id);
+	
+	public abstract SubCategoria getSubCat(Long id);
+	
+	
 
 }

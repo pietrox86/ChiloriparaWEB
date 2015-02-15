@@ -69,5 +69,10 @@
 		<converter-class>it.pbc.chiloripara.web.utls.converters.CategoriaConverter
 		</converter-class>
 	</converter>
+	<converter>
+		<converter-id>subCatConverter</converter-id>
+		<converter-class>it.pbc.chiloripara.web.utls.converters.SubCategoriaConverter
+		</converter-class>
+	</converter>
 
 </faces-config>
