@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:customer="http://java.sun.com/jsf/composite/components/customer"
+	template="/WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+		<p:panel id="mainPanel">
+			<h:form id="subCatForm">
+				<p:growl id="growl" sticky="true" showDetail="true" />
+				<p:outputLabel for="tree" value="Sottocategorie Esistenti"></p:outputLabel>
+				<p:tree id="tree" value="#{subCatMB.root}" var="node">
+					<p:treeNode>
+						<h:outputText value="#{node}" />
+					</p:treeNode>
+				</p:tree>
+
+
+				<p:separator></p:separator>
+				<p:selectOneMenu id="cat" value="#{subCatMB.catId}" required="true"
+					label="Categoria" effect="blind" filter="true">
+					<f:selectItem itemLabel="#{msg_home_selOne}" itemDisabled="true"></f:selectItem>
+					<f:selectItems value="#{subCatMB.comboCat}" />
+					<p:ajax event="change" update="subCatForm"
+						listener="#{subCatMB.loadInsert}">
+					</p:ajax>
+
+				</p:selectOneMenu>
+
+
+
+				<p:dataTable value="#{subCatMB.selCat}" id="display" var="scat"
+					rendered="#{subCatMB.renderSubCats}">
+					<p:column headerText="Categoria">
+						<h:outputText value="#{scat.categoria.descrizione}" />
+					</p:column>
+					<p:column headerText="Sottocategoria">
+						<h:outputText value="#{scat.name}" />
+					</p:column>
+					<p:column headerText="Azioni">
+						<p:commandLink styleClass="ui-icon ui-icon-trash"
+							style="display:inline-block" actionListener="#{subCatMB.delete}"
+							update="display">
+							<f:attribute name="subCatIdAction" value="#{scat.id}" />
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+				<p:fieldset legend="Inserisci nuova SubCategoria"
+					style="margin-bottom:20px" rendered="#{subCatMB.renderSubCats}">
+
+					<h:panelGrid columns="2" cellpadding="5">
+						<p:outputLabel for="categoria" value="Descrizione: " />
+						<p:inputText id="categoria" value="#{subCatMB.descrizione}" />
+						
+
+						<p:commandButton rendered="#{subCatMB.renderSubCats}"
+							value="Inserisci" action="#{subCatMB.insert}" type="submit"
+							ajax="false" update="subCatForm"></p:commandButton>
+						<p:commandButton value="Reset" type="reset" />
+
+					</h:panelGrid>
+				</p:fieldset>
+
+
+			</h:form>
+		</p:panel>
+
+
+
+
+	</ui:define>
+</ui:composition>
