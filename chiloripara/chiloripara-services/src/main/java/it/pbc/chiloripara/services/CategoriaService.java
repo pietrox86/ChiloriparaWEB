@@ -1,6 +1,7 @@
 package it.pbc.chiloripara.services;
 
 import it.pbc.chiloripara.services.dao.CategoriaDAO;
+import it.pbc.chiloripara.services.dao.PreferenzaDAO;
 import it.pbc.chiloripara.services.dao.SubCategoriaDAO;
 import it.pbc.chiloripara.services.interfaces.ICategoriaService;
 import it.pbc.chiloripara.web.model.entities.Categoria;
@@ -20,6 +21,8 @@ public class CategoriaService implements ICategoriaService {
 	private CategoriaDAO catDAO;
 	@Autowired
 	private SubCategoriaDAO subCatDAO;
+	@Autowired
+	private PreferenzaDAO prefDAO;
 
 	/*
 	 * (non-Javadoc)
@@ -113,6 +116,23 @@ public class CategoriaService implements ICategoriaService {
 		return subCatDAO.get(id);
 	}
 
-	
+	@Override
+	@Transactional
+	public void deleteSubCat(Long subCatId) {
+		prefDAO.deleteAllPref(subCatId);
+		subCatDAO.delete(subCatId);
+
+	}
+
+	@Override
+	@Transactional
+	public void createSubCat(Long catId, String descrizione) {
+		Categoria cat = getNoLazy(catId);
+		SubCategoria sub = new SubCategoria();
+		sub.setCategoria(cat);
+		sub.setName(descrizione);
+		subCatDAO.save(sub);
+
+	}
 
 }

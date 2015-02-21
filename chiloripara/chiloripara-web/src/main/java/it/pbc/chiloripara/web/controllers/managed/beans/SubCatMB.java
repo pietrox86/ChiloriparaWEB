@@ -8,13 +8,15 @@ import it.pbc.chiloripara.web.model.entities.Preferenza;
 import it.pbc.chiloripara.web.model.entities.Registro;
 import it.pbc.chiloripara.web.model.entities.SubCategoria;
 
-import java.awt.event.ActionEvent;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
@@ -41,23 +43,47 @@ public class SubCatMB extends GeneralBean {
 	private boolean renderSubCats = false;
 	private DualListModel<SubCategoria> subCategorie;
 	private List<SubCategoria> listSubCat;
-	private List<SubCategoria> SubCatSelezionate;
+	private List<SubCategoria> subCatSelezionate;
 	private TreeNode root;
+	private List<SubCategoria> selCat;
+	private String descrizione;
+
+	public String getDescrizione() {
+		return descrizione;
+	}
+
+	public void setDescrizione(String descrizione) {
+		this.descrizione = descrizione;
+	}
+
+	public List<SubCategoria> getSelCat() {
+		return selCat;
+	}
+
+	public void setSelCat(List<SubCategoria> selCat) {
+		this.selCat = selCat;
+	}
 
 	public String editSubcatAdmin() {
+		logger.debug("inizio l'admin");
 		comboCat = new HashMap<String, Long>();
+		generateTreeAdmin();
 		for (Categoria cat : catService.list()) {
 			comboCat.put(cat.getDescrizione(), cat.getId());
 		}
-		return "subcat";
+		descrizione = "";
+		renderSubCats = false;
+		catId = null;
+		return "adminSubCat";
 	}
 
 	public String conferma() {
+		artService.deletePreferenzaCategoria(artigiano, getCatId());
 		artService.savePreferenza(artigiano, subCategorie.getTarget());
-		renderSubCats=false;
+		renderSubCats = false;
 		generateTree();
 		this.loadCat();
-		catId=null;
+		catId = null;
 		return "subcat";
 	}
 
@@ -78,11 +104,11 @@ public class SubCatMB extends GeneralBean {
 	}
 
 	public List<SubCategoria> getSubCatSelezionate() {
-		return SubCatSelezionate;
+		return subCatSelezionate;
 	}
 
 	public void setSubCatSelezionate(List<SubCategoria> subCatSelezionate) {
-		SubCatSelezionate = subCatSelezionate;
+		subCatSelezionate = subCatSelezionate;
 		this.artigiano = artService.get(artigiano.getId());
 		generateTree();
 	}
@@ -97,9 +123,9 @@ public class SubCatMB extends GeneralBean {
 		generateTree();
 		subCats = new ArrayList<SubCategoria>();
 		listSubCat = new ArrayList<SubCategoria>();
-		SubCatSelezionate = new ArrayList<SubCategoria>();
+		subCatSelezionate = new ArrayList<SubCategoria>();
 		this.subCategorie = new DualListModel<SubCategoria>(listSubCat,
-				SubCatSelezionate);
+				subCatSelezionate);
 		renderSubCats = false;
 		catId = null;
 		this.loadCat();
@@ -113,19 +139,45 @@ public class SubCatMB extends GeneralBean {
 		}
 	}
 
-	public void loadSubCat() {
-		logger.debug("inizio il load");
+	public void loadInsert() {
 
+		Categoria c = catService.getNoLazy(getCatId());
+		this.selCat = new ArrayList<SubCategoria>();
+		selCat.addAll(c.getSubCat());
+		renderSubCats = true;
+
+	}
+
+	public void loadSubCat() {
 		this.subCats.clear();
 		Categoria c = catService.getNoLazy(getCatId());
-		logger.debug("inizio editSubcat " + getCatId());
 		renderSubCats = false;
+		// recupero le preferenza dell'artigiano e carico una lista delle
+		// categorie che ha gia selezionato
+
+		List<SubCategoria> alreadyChoosed = new ArrayList<SubCategoria>();
+		for (Preferenza pref : artigiano.getPreferenze()) {
+			if (pref.getSubCategoria().getCategoria().getId()
+					.compareTo(getCatId()) == 0) {
+				alreadyChoosed.add(pref.getSubCategoria());
+			}
+		}
+
 		if (c != null && c.getSubCat() != null && c.getSubCat().size() > 0) {
 			renderSubCats = true;
-			logger.debug("prima ciclo ");
-			for (int i = 0; i < c.getSubCat().size(); i++) {
-				this.listSubCat.add(c.getSubCat().get(i));
-				logger.debug(c.getSubCat().get(i).getName());
+			boolean found = false;
+			for (SubCategoria sub : c.getSubCat()) {
+				found = false;
+				for (SubCategoria already : alreadyChoosed) {
+					if (already.getId().compareTo(sub.getId()) == 0) {
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+					this.listSubCat.add(sub);
+				else
+					this.subCatSelezionate.add(sub);
 			}
 		}
 		logger.debug("renderizzo " + renderSubCats);
@@ -151,7 +203,7 @@ public class SubCatMB extends GeneralBean {
 		comboCat = new HashMap<String, Long>();
 		root = new DefaultTreeNode("Root", null);
 		HashMap<String, List<SubCategoria>> albero = new HashMap<String, List<SubCategoria>>();
-		logger.debug("numero preferenze: "+artigiano.getPreferenze().size());
+		logger.debug("numero preferenze: " + artigiano.getPreferenze().size());
 		for (Preferenza pref : artigiano.getPreferenze()) {
 
 			if (albero.get(pref.getSubCategoria().getCategoria()
@@ -164,6 +216,37 @@ public class SubCatMB extends GeneralBean {
 				elements.add(pref.getSubCategoria());
 				albero.put(pref.getSubCategoria().getCategoria()
 						.getDescrizione(), elements);
+			}
+
+		}
+		Iterator<Entry<String, List<SubCategoria>>> iterator = albero
+				.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, List<SubCategoria>> entry = iterator.next();
+			TreeNode node = new DefaultTreeNode(entry.getKey(), root);
+			for (SubCategoria subCat : entry.getValue()) {
+				TreeNode childNode = new DefaultTreeNode(subCat.getName(), node);
+			}
+		}
+	}
+
+	private void generateTreeAdmin() {
+		List<Categoria> categorie = catService.list();
+		List<SubCategoria> subCategorie = new ArrayList<SubCategoria>();
+		for (Categoria cat : categorie) {
+			subCategorie.addAll(cat.getSubCat());
+		}
+		root = new DefaultTreeNode("Root", null);
+		HashMap<String, List<SubCategoria>> albero = new HashMap<String, List<SubCategoria>>();
+
+		for (SubCategoria subC : subCategorie) {
+
+			if (albero.get(subC.getCategoria().getDescrizione()) != null) {
+				albero.get(subC.getCategoria().getDescrizione()).add(subC);
+			} else {
+				List<SubCategoria> elements = new ArrayList();
+				elements.add(subC);
+				albero.put(subC.getCategoria().getDescrizione(), elements);
 			}
 
 		}
@@ -224,6 +307,29 @@ public class SubCatMB extends GeneralBean {
 
 	public void setCatId(Long catId) {
 		this.catId = catId;
+	}
+
+	public void insert() {
+		catService.createSubCat(getCatId(), descrizione);
+		loadInsert();
+	}
+
+	public void delete(ActionEvent event) {
+		Long subCatIdAction = (Long) event.getComponent().getAttributes()
+				.get("subCatIdAction");
+		try {
+			catService.deleteSubCat(subCatIdAction);
+		} catch (Exception e) {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Errore", "Impossibile eliminare la Sottocategoria");
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+			return;
+		}
+		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"Completato", "Sottocategoria eliminata.");
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+		loadInsert();
+
 	}
 
 }

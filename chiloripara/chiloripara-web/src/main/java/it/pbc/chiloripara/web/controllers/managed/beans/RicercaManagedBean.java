@@ -7,6 +7,7 @@ import it.pbc.chiloripara.web.model.entities.Categoria;
 import it.pbc.chiloripara.web.model.notPersisted.ArtigianoDistanza;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,6 +122,8 @@ public class RicercaManagedBean {
 		private void init() {
 			logger.debug("recuper la lista delle categorie");
 			list = catService.list();
+			this.subCats.clear();
+			this.subCatId=null;
 			logger.debug("lista categorie recuperata");
 			if (list != null) {
 				logger.debug("list categorie contiene " + list.size() + " elementi");
@@ -163,12 +166,12 @@ public class RicercaManagedBean {
     }
 
     public List<ArtigianoDistanza> getResult() {
-    	logger.info("ritorno i risultati: "+result.size());
+    	
 	return result;
     }
 
     public void setResult(List<ArtigianoDistanza> result) {
-    	logger.info("salvo i risultati: "+result.size());
+    	
 	this.result = result;
     }
 
@@ -209,14 +212,20 @@ public class RicercaManagedBean {
 
     public String find(){
 	logger.debug("inizio la ricerca degli artigiani");
-	
+	this.result= new ArrayList<ArtigianoDistanza>();
 	logger.debug("categoria "+ getCatId());
 	logger.debug("indirizzo "+ getAddress());
+	logger.debug("sottocategoria " +getSubCatId());
 	
 	HashMap<String, Float> coordinate;
 	try {
+		
 	    coordinate = googleService.getCoordinate(getAddress());
-	   this.result= ricercaService.getArtigianiByCatAndCoord(getCatId(), coordinate.get("LAT"), coordinate.get("LNG"));
+	   
+	   if(getSubCatId()!=null && subCatId.compareTo(new Long(0))==1)
+		   this.result= ricercaService.getArtigianiByCatAndCoordSubCat(getSubCatId(), coordinate.get("LAT"), coordinate.get("LNG"));
+	   else	    
+		   this.result= ricercaService.getArtigianiByCatAndCoord(getCatId(), coordinate.get("LAT"), coordinate.get("LNG"));
 	   logger.debug("risultati: "+result.size());
 	} catch (IOException e) {
 		e.printStackTrace();

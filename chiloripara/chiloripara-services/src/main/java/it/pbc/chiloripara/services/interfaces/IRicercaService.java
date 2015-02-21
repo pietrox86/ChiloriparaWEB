@@ -13,4 +13,7 @@ public interface IRicercaService {
 	
 	public abstract List<ArtigianoDistanza> getArtigianiByCatAndAddress(Long catId,String address) throws Exception;
 
+	public abstract List<ArtigianoDistanza> getArtigianiByCatAndCoordSubCat(
+			Long subCatId, Float lat, Float lng);
+
 }

@@ -20,9 +20,11 @@ public interface ICategoriaService {
 	public abstract void disableCat(Long catIdAction);
 
 	public abstract Categoria getNoLazy(Long id);
-	
+
 	public abstract SubCategoria getSubCat(Long id);
-	
-	
+
+	public abstract void deleteSubCat(Long subCatId);
+
+	public abstract void createSubCat(Long catId, String descrizione);
 
 }

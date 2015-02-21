@@ -3,6 +3,7 @@ package it.pbc.chiloripara.services;
 import it.pbc.chiloripara.services.dao.ArtigianoDAO;
 import it.pbc.chiloripara.services.dao.PostDAO;
 import it.pbc.chiloripara.services.dao.PreferenzaDAO;
+import it.pbc.chiloripara.services.dao.SubCategoriaDAO;
 import it.pbc.chiloripara.services.dao.VotoDAO;
 import it.pbc.chiloripara.services.interfaces.IArtigianoService;
 import it.pbc.chiloripara.services.interfaces.IBachecaService;
@@ -54,6 +55,8 @@ public class ArtigianoService implements IArtigianoService {
 	private VotoDAO votoDAO;
 	@Autowired
 	private IGoogleService googleService;
+	@Autowired
+	private SubCategoriaDAO subCatDAO;
 
 	/*
 	 * (non-Javadoc)
@@ -218,8 +221,9 @@ public class ArtigianoService implements IArtigianoService {
 	@Override
 	@Transactional
 	public void savePreferenza(Artigiano artigiano, List<SubCategoria> target) {
-		if(artigiano.getPreferenze()==null)
+		if (artigiano.getPreferenze() == null)
 			artigiano.setPreferenze(new ArrayList<Preferenza>());
+
 		for (SubCategoria subCat : target) {
 			Artigiano arti = artDAO.get(artigiano.getId());
 			Preferenza pref = new Preferenza();
@@ -233,4 +237,20 @@ public class ArtigianoService implements IArtigianoService {
 
 	}
 
+	@Override
+	@Transactional
+	public void deletePreferenzaCategoria(Artigiano artigiano, Long catId) {
+
+		for (SubCategoria sub : subCatDAO.getSubCat(catId)) {
+			prefDAO.deletePreferenza(artigiano.getId(), sub.getId());
+			for (int i = 0; i < artigiano.getPreferenze().size(); i++) {
+				if (artigiano.getPreferenze().get(i).getSubCategoria().getId()
+						.compareTo(sub.getId()) == 0) {
+					artigiano.getPreferenze().remove(i);
+					i--;
+				}
+			}
+		}
+
+	}
 }

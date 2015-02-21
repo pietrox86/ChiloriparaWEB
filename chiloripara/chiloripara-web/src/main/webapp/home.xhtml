@@ -33,7 +33,7 @@
 						<p:selectOneMenu id="subcat" value="#{ricercaMB.subCatId}"
 							rendered="#{ricercaMB.renderSubCats}" required="false"
 							label="Categoria" effect="blind" filter="true">
-							<f:selectItem itemLabel="#{msg_home_selOne}" itemDisabled="true"></f:selectItem>
+							<f:selectItem itemLabel="#{msg_home_selOne}" itemDisabled="false" itemValue="0"></f:selectItem>
 							<f:selectItems value="#{ricercaMB.subCats}" />
 
 						</p:selectOneMenu>

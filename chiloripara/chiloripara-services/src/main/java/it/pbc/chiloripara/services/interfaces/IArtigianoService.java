@@ -15,7 +15,8 @@ public interface IArtigianoService {
 
 	public abstract void aggiungiMessaggio(Artigiano art, Post post);
 
-	public abstract Artigiano aggiornaDatiPersonali(Artigiano artigiano) throws RollbackException;
+	public abstract Artigiano aggiornaDatiPersonali(Artigiano artigiano)
+			throws RollbackException;
 
 	public abstract void checkDetached(Artigiano art);
 
@@ -32,8 +33,11 @@ public interface IArtigianoService {
 	public abstract List<Artigiano> list();
 
 	public abstract List<Voto> getVoti(Long artId);
-	
+
 	public abstract void savePreferenza(Artigiano artigiano,
 			List<SubCategoria> target);
+
+	public abstract void deletePreferenzaCategoria(Artigiano artigiano,
+			Long catId);
 
 }

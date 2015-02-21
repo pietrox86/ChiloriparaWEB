@@ -28,4 +28,14 @@ public class SubCategoriaDAO extends GeneralDAO {
 		return entityManager.find(SubCategoria.class, id);
 	}
 
+	public void delete(Long subCatId) {
+		entityManager.remove(get(subCatId));
+
+	}
+
+	public void save(SubCategoria sub) {
+		entityManager.persist(sub);
+
+	}
+
 }
